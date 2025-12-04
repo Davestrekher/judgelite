@@ -1,22 +1,24 @@
 package io.github.davestrekher.judgelite.judge;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import io.github.davestrekher.judgelite.controller.CasoTesteController;
 import io.github.davestrekher.judgelite.model.CasoTeste;
 
 public class TestCaseRunner {
 
   private ExecutionEngine exec = new ExecutionEngine();
 
-  public JudgeResult rodarTodosTestes(String submissionId, String problemId, String linguagem)
+  public JudgeResult rodarTodosTestes(Integer submissionId, Integer problemId, String linguagem)
       throws IOException, InterruptedException {
 
     List<CasoTeste> tests = carregarTestes(problemId);
 
     for (CasoTeste t : tests) {
 
-      RunResult result = exec.executar(submissionId, t.entrada, linguagem);
+      RunResult result = exec.executar(submissionId, t.obterEntrada(), linguagem);
 
       if (result.error == RunResult.RunErrorType.RUNTIME_ERROR) {
         return JudgeResult.runtimeError();
@@ -26,7 +28,9 @@ public class TestCaseRunner {
         return JudgeResult.timeLimitExceeded();
       }
 
-      boolean ok = result.stdout.trim().equals(t.saidaEsperada.trim());
+      // Esse trim() remove os espaços em branco antes e depois da string para tentar
+      // evitar erros devidos a forma como a string é extraída
+      boolean ok = result.stdout.trim().equals(t.obterSaida().trim());
       if (!ok) {
         return JudgeResult.wrongAnswer();
       }
@@ -35,15 +39,15 @@ public class TestCaseRunner {
     return JudgeResult.accepted();
   }
 
-  public List<CasoTeste> carregarTestes(String problemId) {
-    List<CasoTeste> list;
+  public ArrayList<CasoTeste> carregarTestes(Integer problemId) {
+    ArrayList<CasoTeste> list = new ArrayList<CasoTeste>();
 
     // Contador para contar cada caso teste
     int contador = 0;
 
     // Requisição pro Banco de Dados pedindo cada caso teste
-    // ProblemaDAO p = new ProblemaDAO();
-    // CasoTeste c = p.getCasoTeste(contador, problemId);
+    CasoTesteController casosController = new CasoTesteController();
+    CasoTeste c = casosController.pesquisarCasoTeste(contador, problemId);
     while (c != null) {
       list.add(c);
       contador++;

@@ -3,7 +3,7 @@ package io.github.davestrekher.judgelite.judge;
 import java.io.IOException;
 
 public class CompilerService {
-  public int compilar(String submissionId, String linguagem) throws IOException, InterruptedException {
+  public int compilar(Integer submissionId, String linguagem) throws IOException, InterruptedException {
     // Importante para a formatação de string
     String comandoDeCompilacao = "";
     // Aqui vai o nome do arquivo que será usado para colocar o código-fonte, pois o
@@ -36,7 +36,7 @@ public class CompilerService {
 
     // IMPORTANTE: define o diretório onde o pb será executado
     // Não faço ideia se esse modo de definir o path vai funcionar. Requer testes
-    String folder = "/target/submissions" + submissionId;
+    String folder = "/target/submissions/" + submissionId;
     pb.directory(new java.io.File(folder));
 
     // Redireciona o erro. Não sei bem o que faz, mas aparentemente é bom deixar em

@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ExecutionEngine {
 
-  public RunResult executar(String submissionId, String input, String linguagem)
+  public RunResult executar(Integer submissionId, String input, String linguagem)
       throws IOException, InterruptedException {
     // Importante para a formatação de string
     String comandoDeExecucao = "";
